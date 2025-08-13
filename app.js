@@ -1101,44 +1101,68 @@ function initializeFormValidation() {
     });
 
     // Form submission
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
+    // form.addEventListener('submit', function(e) {
+    //     e.preventDefault();
+    //     e.stopPropagation();
         
-        console.log('Form submitted');
+    //     console.log('Form submitted');
         
-        // Clear any existing messages
-        clearAllMessages(form);
+    //     // Clear any existing messages
+    //     clearAllMessages(form);
         
-        // Validate all fields
-        let isValid = true;
-        Object.keys(fields).forEach(fieldName => {
-            const field = fields[fieldName];
-            if (field && !validateField(fieldName, field, validationRules[fieldName])) {
-                isValid = false;
-            }
-        });
+    //     // Validate all fields
+    //     let isValid = true;
+    //     Object.keys(fields).forEach(fieldName => {
+    //         const field = fields[fieldName];
+    //         if (field && !validateField(fieldName, field, validationRules[fieldName])) {
+    //             isValid = false;
+    //         }
+    //     });
 
-        // Additional custom validations
-        if (!checkFromToValidation(fields)) {
-            isValid = false;
-        }
+    //     // Additional custom validations
+    //     if (!checkFromToValidation(fields)) {
+    //         isValid = false;
+    //     }
         
-        if (!checkTimeValidation(fields)) {
-            isValid = false;
-        }
+    //     if (!checkTimeValidation(fields)) {
+    //         isValid = false;
+    //     }
 
-        if (isValid) {
-            submitWaitlistForm(form, submitButton, fields);
-        } else {
-            // Scroll to first error
-            const firstError = form.querySelector('.form-control.error');
-            if (firstError) {
-                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                setTimeout(() => firstError.focus(), 500);
-            }
-        }
+    //     if (isValid) {
+    //         submitWaitlistForm(form, submitButton, fields);
+    //     } else {
+    //         // Scroll to first error
+    //         const firstError = form.querySelector('.form-control.error');
+    //         if (firstError) {
+    //             firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    //             setTimeout(() => firstError.focus(), 500);
+    //         }
+    //     }
+    // });
+    
+    // Google Sheets integration
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyZgnczyu-83eCwPUgjTMShiXKuvlbXo-rR6swRql5CR4mD-wyQIpQxZnmPWsmZPNJb/exec';
+    const formm = document.getElementById('bookingForm'); // Matches your HTML <form id="bookingForm">
+
+    form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const fd = new FormData(formm);
+
+    try {
+        const res = await fetch(scriptURL, { method: 'POST', body: fd });
+        if (!res.ok) throw new Error('Network response was not ok');
+
+        // Success feedback
+        alert("✅ Joined the waitlist successfully!");
+        form.reset();
+
+    } catch (err) {
+        alert("❌ Something went wrong. Please try again.");
+        console.error(err);
+    }
     });
+
 
     // Validate individual field
     function validateField(fieldName, field, rule) {
