@@ -1153,6 +1153,19 @@ function initializeFormValidation() {
         const res = await fetch(scriptURL, { method: 'POST', body: fd });
         if (!res.ok) throw new Error('Network response was not ok');
 
+        // Confetti from top on success
+        try {
+            if (window.confetti) {
+                window.confetti({
+                    particleCount: 150,
+                    spread: 70,
+                    origin: { y: 0 },
+                    startVelocity: 50,
+                    ticks: 200
+                });
+            }
+        } catch (_) {}
+
         // Success feedback
         alert("✅ Joined the waitlist successfully!");
         form.reset();
