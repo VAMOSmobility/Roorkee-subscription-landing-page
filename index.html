@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="VAMOS Mobility - Join the waitlist for affordable and reliable daily commute solutions in Roorkee. Interactive maps, precise scheduling, and seamless booking.">
+    <meta name="keywords" content="Roorkee transport, daily commute, shared rides, IIT Roorkee transport, affordable travel, student transport, waitlist">
+    <title>VAMOS Mobility - Join the Waitlist for Smart Commuting in Roorkee</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header__content">
+                <div class="logo">
+                    <h1 class="logo__text">VAMOS</h1>
+                    <span class="logo__tagline" data-translate="tagline">Daily Commute Made Simple</span>
+                </div>
+                <nav class="nav">
+                    <div class="language-toggle">
+                        <button id="languageToggle" class="btn btn--outline btn--sm" aria-label="Toggle Language">
+                            <span class="language-toggle__text">हिन्दी</span>
+                        </button>
+                    </div>
+                    <a href="#how-it-works" class="nav__link" data-translate="nav_how_it_works">How It Works</a>
+                    <a href="#features" class="nav__link" data-translate="nav_features">Features</a>
+                    <a href="#contact" class="nav__link" data-translate="nav_contact">Contact</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero__content">
+                <div class="hero__text">
+                    <h1 class="hero__title" data-translate="hero_title">Transform Your Daily Commute in Roorkee</h1>
+                    <p class="hero__subtitle" data-translate="hero_subtitle">Join the waitlist for affordable, reliable shared rides. Be the first to experience seamless transportation to offices, school, tuitions and colleges.</p>
+                    
+                    <div class="benefits">
+                        <div class="benefit">
+                            <span class="benefit__icon">💰</span>
+                            <span class="benefit__text" data-translate="benefit_1">Affordable shared rides</span>
+                        </div>
+                        <div class="benefit">
+                            <span class="benefit__icon">⏰</span>
+                            <span class="benefit__text" data-translate="benefit_2">Reliable daily transport</span>
+                        </div>
+                        <div class="benefit">
+                            <span class="benefit__icon">🛡️</span>
+                            <span class="benefit__text" data-translate="benefit_3">Safe & secure travel</span>
+                        </div>
+                        <div class="benefit">
+                            <span class="benefit__icon">🌱</span>
+                            <span class="benefit__text" data-translate="benefit_4">Eco-friendly commuting</span>
+                        </div>
+                    </div>
+
+                    <!-- Waitlist Perks -->
+                    <div class="waitlist-perks">
+                        <h3 class="waitlist-perks__title" data-translate="waitlist_perks_title">Early Access Benefits:</h3>
+                        <ul class="waitlist-perks__list">
+                            <li data-translate="perk_1">Early access to the app</li>
+                            <li data-translate="perk_2">Special launch discounts</li>
+                            <li data-translate="perk_3">Priority route planning</li>
+                            <li data-translate="perk_4">Beta testing opportunities</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Enhanced Booking Form -->
+                <div class="booking-form">
+                    <div class="card">
+                        <div class="card__body">
+                            <h2 class="form__title" data-translate="form_title">Join the Waitlist</h2>
+                            <p class="form__subtitle" data-translate="form_subtitle">Be the first to know when we launch in your area</p>
+                            
+                            <form id="bookingForm" class="form">
+                                <!-- From Location with Map -->
+                                <div class="form-group">
+                                    <label for="fromLocation" class="form-label" data-translate="form_from">Pickup Location</label>
+                                    <div class="location-input-container">
+                                        <input 
+                                            type="text" 
+                                            id="fromLocation" 
+                                            name="fromLocation" 
+                                            class="form-control location-search"
+                                            placeholder="Type or click on map..."
+                                            data-translate-placeholder="from_placeholder"
+                                            autocomplete="off"
+                                            required
+                                        >
+                                        <button type="button" class="location-btn" data-location="from" aria-label="Show map">📍</button>
+                                    </div>
+                                    <div id="fromSuggestions" class="suggestions-dropdown hidden"></div>
+                                    <div id="fromMap" class="map-container hidden">
+                                        <div class="map-header">
+                                            <span data-translate="select_pickup">Select pickup location on map</span>
+                                            <button type="button" class="map-close" data-map="from">&times;</button>
+                                        </div>
+                                        <div class="map" id="fromMapEl"></div>
+                                        <button type="button" class="btn btn--sm current-location" data-map="from">
+                                            <span data-translate="use_current_location">📍 Use Current Location</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- To Location with Map -->
+                                <div class="form-group">
+                                    <label for="toLocation" class="form-label" data-translate="form_to">Drop Location</label>
+                                    <div class="location-input-container">
+                                        <input 
+                                            type="text" 
+                                            id="toLocation" 
+                                            name="toLocation" 
+                                            class="form-control location-search"
+                                            placeholder="Type or click on map..."
+                                            data-translate-placeholder="to_placeholder"
+                                            autocomplete="off"
+                                            required
+                                        >
+                                        <button type="button" class="location-btn" data-location="to" aria-label="Show map">📍</button>
+                                    </div>
+                                    <div id="toSuggestions" class="suggestions-dropdown hidden"></div>
+                                    <div id="toMap" class="map-container hidden">
+                                        <div class="map-header">
+                                            <span data-translate="select_destination">Select destination on map</span>
+                                            <button type="button" class="map-close" data-map="to">&times;</button>
+                                        </div>
+                                        <div class="map" id="toMapEl"></div>
+                                        <button type="button" class="btn btn--sm current-location" data-map="to">
+                                            <span data-translate="use_current_location">📍 Use Current Location</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Precise Time Selection -->
+                                <div class="form-row form-row--half">
+                                    <div class="form-group">
+                                        <label for="pickupTime" class="form-label" data-translate="form_pickup_time">Pickup Time</label>
+                                        <div class="time-input-container">
+                                            <input 
+                                                type="time" 
+                                                id="pickupTime" 
+                                                name="pickupTime" 
+                                                class="form-control time-input"
+                                                required
+                                            >
+                                            <button type="button" class="time-presets-btn" data-target="pickupTime">⏰</button>
+                                        </div>
+                                        <div id="pickupTimePresets" class="time-presets hidden">
+                                            <div class="time-presets__header" data-translate="common_times">Common Times</div>
+                                            <div class="time-presets__grid" data-target="pickupTime"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="returnTime" class="form-label" data-translate="form_return_time">Return Time</label>
+                                        <div class="time-input-container">
+                                            <input 
+                                                type="time" 
+                                                id="returnTime" 
+                                                name="returnTime" 
+                                                class="form-control time-input"
+                                                required
+                                            >
+                                            <button type="button" class="time-presets-btn" data-target="returnTime">⏰</button>
+                                        </div>
+                                        <div id="returnTimePresets" class="time-presets hidden">
+                                            <div class="time-presets__header" data-translate="common_times">Common Times</div>
+                                            <div class="time-presets__grid" data-target="returnTime"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-row form-row--half">
+                                    <div class="form-group">
+                                        <label for="people" class="form-label" data-translate="form_people">Number of People</label>
+                                        <select id="people" name="people" class="form-control" required>
+                                            <option value="" data-translate="select_people">Select</option>
+                                            <option value="1" data-translate="people_1">1 Person</option>
+                                            <option value="2" data-translate="people_2">2 People</option>
+                                            <option value="3" data-translate="people_3">3 People</option>
+                                            <option value="4" data-translate="people_4">4 People</option>
+                                            <option value="5" data-translate="people_5">5 People</option>
+                                            <option value="6" data-translate="people_6">6 People</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="priceRange" class="form-label" data-translate="form_price">Expected Daily Price</label>
+                                        <input 
+                                            type="text" 
+                                            id="priceRange" 
+                                            name="priceRange" 
+                                            class="form-control"
+                                            placeholder="Enter expected daily price"
+                                            data-translate-placeholder="price_placeholder"
+                                            required
+                                        >
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="phone" class="form-label" data-translate="form_phone">Phone Number</label>
+                                    <input 
+                                        type="tel" 
+                                        id="phone" 
+                                        name="phone" 
+                                        class="form-control"
+                                        placeholder="e.g., +91 98765 43210"
+                                        data-translate-placeholder="phone_placeholder"
+                                        required
+                                        pattern="^[+]?[0-9\-\s()]{7,15}$"
+                                    >
+                                </div>
+
+                                <button type="submit" class="btn btn--primary btn--full-width btn--lg">
+                                    <span data-translate="submit_button">Join the Waitlist</span> →
+                                </button>
+
+                                <p class="form__note" data-translate="form_note">Free to join • No commitment • Early access guaranteed</p>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2 class="section-title" data-translate="features_title">Why Join VAMOS Waitlist?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-card__icon">💰</div>
+                    <h3 class="feature-card__title" data-translate="feature_1_title">Affordable Shared Rides</h3>
+                    <p class="feature-card__text" data-translate="feature_1_desc">Save up to 70% on daily transport costs by sharing rides with fellow commuters traveling the same route.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-card__icon">⏰</div>
+                    <h3 class="feature-card__title" data-translate="feature_2_title">Reliable Daily Transport</h3>
+                    <p class="feature-card__text" data-translate="feature_2_desc">Punctual pickups and drops ensure you never miss classes, work, or important appointments.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-card__icon">📍</div>
+                    <h3 class="feature-card__title" data-translate="feature_3_title">Smart Route Mapping</h3>
+                    <p class="feature-card__text" data-translate="feature_3_desc">Interactive maps with pin-point accuracy for pickup and drop locations across Roorkee.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-card__icon">🛡️</div>
+                    <h3 class="feature-card__title" data-translate="feature_4_title">Safe & Secure Travel</h3>
+                    <p class="feature-card__text" data-translate="feature_4_desc">Verified drivers, real-time tracking, and 24/7 support for your peace of mind.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-card__icon">🌱</div>
+                    <h3 class="feature-card__title" data-translate="feature_5_title">Eco-friendly Commuting</h3>
+                    <p class="feature-card__text" data-translate="feature_5_desc">Reduce your carbon footprint by sharing rides and contributing to a cleaner Roorkee.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-card__icon">⚡</div>
+                    <h3 class="feature-card__title" data-translate="feature_6_title">Flexible Precise Timing</h3>
+                    <p class="feature-card__text" data-translate="feature_6_desc">Select exact pickup and return times to the minute for perfect schedule alignment.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <h2 class="section-title" data-translate="how_title">How VAMOS Will Work</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step__number">1</div>
+                    <h3 class="step__title" data-translate="step_1_title">Join the Waitlist</h3>
+                    <p class="step__text" data-translate="step_1_desc">Sign up with your commute details using our interactive form. Get priority access when we launch!</p>
+                </div>
+                <div class="step">
+                    <div class="step__number">2</div>
+                    <h3 class="step__title" data-translate="step_2_title">Get Early Access</h3>
+                    <p class="step__text" data-translate="step_2_desc">Be among the first to download the app and start booking rides with special launch benefits.</p>
+                </div>
+                <div class="step">
+                    <div class="step__number">3</div>
+                    <h3 class="step__title" data-translate="step_3_title">Smart Commuting</h3>
+                    <p class="step__text" data-translate="step_3_desc">Enjoy comfortable, affordable rides with precise timing and route optimization every day.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Launch Timeline Section -->
+    <section class="timeline">
+        <div class="container">
+            <h2 class="section-title" data-translate="timeline_title">Launch Timeline</h2>
+            <div class="timeline-content">
+                <div class="timeline-item">
+                    <div class="timeline-badge current">✅</div>
+                    <div class="timeline-content">
+                        <h4 data-translate="timeline_1_title">Waitlist Open</h4>
+                        <p data-translate="timeline_1_desc">Join now to secure your spot</p>
+                        <span class="timeline-date" data-translate="timeline_1_date">Now - February 2025</span>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-badge upcoming">🚀</div>
+                    <div class="timeline-content">
+                        <h4 data-translate="timeline_2_title">Beta Testing</h4>
+                        <p data-translate="timeline_2_desc">Selected waitlist members get early access</p>
+                        <span class="timeline-date" data-translate="timeline_2_date">March 2025</span>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-badge future">🎉</div>
+                    <div class="timeline-content">
+                        <h4 data-translate="timeline_3_title">Full Launch</h4>
+                        <p data-translate="timeline_3_desc">VAMOS goes live for everyone</p>
+                        <span class="timeline-date" data-translate="timeline_3_date">April 2025</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Proof Section -->
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title" data-translate="testimonials_title">What Roorkee Commuters Are Saying</h2>
+            <div class="testimonials-grid">
+                <div class="testimonial">
+                    <div class="testimonial__content">
+                        <p class="testimonial__text" data-translate="testimonial_1">"Can't wait for VAMOS to launch! The interactive map feature looks amazing for finding exact pickup spots."</p>
+                        <div class="testimonial__author">
+                            <strong>Priya S.</strong>
+                            <span data-translate="testimonial_1_role">IIT Roorkee Student</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial">
+                    <div class="testimonial__content">
+                        <p class="testimonial__text" data-translate="testimonial_2">"Finally, a solution that understands the need for precise timing. Already joined the waitlist!"</p>
+                        <div class="testimonial__author">
+                            <strong>Rajesh K.</strong>
+                            <span data-translate="testimonial_2_role">Software Engineer</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial">
+                    <div class="testimonial__content">
+                        <p class="testimonial__text" data-translate="testimonial_3">"Love that they're supporting both Hindi and English. Very thoughtful for our diverse community."</p>
+                        <div class="testimonial__author">
+                            <strong>Ananya M.</strong>
+                            <span data-translate="testimonial_3_role">College Student</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat__number" data-translate="stat_1_number">2000+</div>
+                    <div class="stat__text" data-translate="stat_1_text">Waitlist Members</div>
+                </div>
+                <div class="stat">
+                    <div class="stat__number" data-translate="stat_2_number">25+</div>
+                    <div class="stat__text" data-translate="stat_2_text">Routes Planned</div>
+                </div>
+                <div class="stat">
+                    <div class="stat__number" data-translate="stat_3_number">95%</div>
+                    <div class="stat__text" data-translate="stat_3_text">Interest Rate</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="footer">
+        <div class="container">
+            <div class="footer__content">
+                <div class="footer__brand">
+                    <h3 class="logo__text">VAMOS Mobility</h3>
+                    <p class="footer__tagline" data-translate="tagline">Daily Commute Made Simple</p>
+                    <p class="footer__description" data-translate="footer_desc">Connecting Roorkee commuters with affordable, reliable, and smart shared transportation. Join the revolution!</p>
+                </div>
+                
+                <div class="footer__contact">
+                    <h4 data-translate="contact_title">Contact Us</h4>
+                    <p data-translate="contact_email">📧 hello@vamosmobility.com</p>
+                    <p data-translate="contact_phone">📱 +91-XXXXX-XXXXX</p>
+                    <p data-translate="contact_address">📍 Roorkee, Uttarakhand</p>
+                </div>
+                
+                <div class="footer__links">
+                    <h4 data-translate="quick_links">Quick Links</h4>
+                    <a href="#" class="footer__link" data-translate="link_about">About Us</a>
+                    <a href="#" class="footer__link" data-translate="link_safety">Safety</a>
+                    <a href="#" class="footer__link" data-translate="link_terms">Terms</a>
+                    <a href="#" class="footer__link" data-translate="link_privacy">Privacy</a>
+                </div>
+            </div>
+            
+            <div class="footer__bottom">
+                <p data-translate="copyright">&copy; 2025 VAMOS Mobility. All rights reserved. Made with ❤️ for Roorkee commuters.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
