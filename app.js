@@ -1327,6 +1327,18 @@ function submitWaitlistForm(form, button, fields) {
         
         // Show success message
         showWaitlistSuccessMessage(form);
+        // Confetti on success
+        try {
+            if (window.confetti) {
+                window.confetti({
+                    particleCount: 120,
+                    spread: 70,
+                    origin: { y: 0 },
+                    startVelocity: 50,
+                    ticks: 200
+                });
+            }
+        } catch (_) {}
         
         console.log('Waitlist signup completed');
         
