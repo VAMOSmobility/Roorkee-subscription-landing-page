@@ -1155,6 +1155,17 @@ function initializeFormValidation() {
     e.preventDefault();
     
     const fd = new FormData(formm);
+    // Attach coordinates from dataset to POST body
+    const fromEl = document.getElementById('fromLocation');
+    const toEl = document.getElementById('toLocation');
+    const fromLat = fromEl?.dataset?.lat || '';
+    const fromLng = fromEl?.dataset?.lng || '';
+    const toLat = toEl?.dataset?.lat || '';
+    const toLng = toEl?.dataset?.lng || '';
+    fd.append('fromLat', fromLat);
+    fd.append('fromLng', fromLng);
+    fd.append('toLat', toLat);
+    fd.append('toLng', toLng);
 
     try {
         const res = await fetch(scriptURL, { method: 'POST', body: fd });
