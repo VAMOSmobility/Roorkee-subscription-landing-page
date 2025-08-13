@@ -1076,6 +1076,13 @@ function initializeFormValidation() {
         }
     };
 
+    // Fire confetti immediately on submit button click
+    if (submitButton) {
+        submitButton.addEventListener('click', function() {
+            try { triggerConfettiBurst(); } catch (_) {}
+        });
+    }
+
     // Add real-time validation to each field
     Object.keys(fields).forEach(fieldName => {
         const field = fields[fieldName];
@@ -1152,19 +1159,6 @@ function initializeFormValidation() {
     try {
         const res = await fetch(scriptURL, { method: 'POST', body: fd });
         if (!res.ok) throw new Error('Network response was not ok');
-
-        // Confetti from top on success
-        try {
-            if (window.confetti) {
-                window.confetti({
-                    particleCount: 150,
-                    spread: 70,
-                    origin: { y: 0 },
-                    startVelocity: 50,
-                    ticks: 200
-                });
-            }
-        } catch (_) {}
 
         // Success feedback
         alert("✅ Joined the waitlist successfully!");
@@ -1340,18 +1334,6 @@ function submitWaitlistForm(form, button, fields) {
         
         // Show success message
         showWaitlistSuccessMessage(form);
-        // Confetti on success
-        try {
-            if (window.confetti) {
-                window.confetti({
-                    particleCount: 120,
-                    spread: 70,
-                    origin: { y: 0 },
-                    startVelocity: 50,
-                    ticks: 200
-                });
-            }
-        } catch (_) {}
         
         console.log('Waitlist signup completed');
         
@@ -1486,6 +1468,17 @@ additionalStyles.textContent = `
     }
 `;
 document.head.appendChild(additionalStyles);
+
+// Confetti helper for stronger effect
+function triggerConfettiBurst() {
+    if (!window.confetti) return;
+    // Fire a couple of angled bursts from the top for intensity
+    const defaults = { origin: { y: 0 }, startVelocity: 65, ticks: 250 }; // longer, faster
+    window.confetti({ ...defaults, particleCount: 200, spread: 60, angle: 60 });
+    window.confetti({ ...defaults, particleCount: 200, spread: 60, angle: 120 });
+    // Fan burst
+    window.confetti({ ...defaults, particleCount: 250, spread: 90 });
+}
 
 // Error handling
 window.addEventListener('error', function(e) {
